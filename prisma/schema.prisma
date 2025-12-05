@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  name         String?
+  dob         DateTime?
+  googleId     String?   @unique
+  passwordHash String? // Optional: if you want password login later
+
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // otps      OTP[]   // ❌ remove this, OTP is email-based now
+  sessions Session[]
+}
+
+model OTP {
+  id        Int        @id @default(autoincrement())
+  email     String
+  code      String
+  purpose   OtpPurpose @default(LOGIN) // SIGNUP / LOGIN / RESET, etc.
+  expiresAt DateTime
+  verified  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+
+  @@index([email, purpose, expiresAt])
+}
+
+model Session {
+  id           Int     @id @default(autoincrement())
+  refreshToken String? @unique
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+// ---------------- ENUMS ----------------
+
+enum OtpPurpose {
+  SIGNUP
+  LOGIN
+  PASSWORD_RESET
+}
+
+enum Role {
+  USER
+  ADMIN
+}
