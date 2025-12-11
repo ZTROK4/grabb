@@ -7,17 +7,7 @@ export declare function verifySignupOtp(email: string, otp: string): Promise<{
 }>;
 export declare function completeSignup(tempToken: string, name: string, dob?: string): Promise<{
     message: string;
-    user: {
-        id: number;
-        email: string;
-        googleId: string | null;
-        name: string | null;
-        dob: Date | null;
-        passwordHash: string | null;
-        role: import(".prisma/client").$Enums.Role;
-        createdAt: Date;
-        updatedAt: Date;
-    };
+    user: any;
     accessToken: string;
     refreshToken: string;
 }>;
@@ -26,17 +16,7 @@ export declare function sendLoginOtp(email: string): Promise<{
 }>;
 export declare function verifyLoginOtp(email: string, otp: string): Promise<{
     message: string;
-    user: {
-        id: number;
-        email: string;
-        googleId: string | null;
-        name: string | null;
-        dob: Date | null;
-        passwordHash: string | null;
-        role: import(".prisma/client").$Enums.Role;
-        createdAt: Date;
-        updatedAt: Date;
-    };
+    user: any;
     accessToken: string;
     refreshToken: string;
 }>;
